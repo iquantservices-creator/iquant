@@ -1,0 +1,2101 @@
+<!-- index.html -->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IQuant – Data-Driven Macroeconomic Trading Signals</title>
+    <link rel="icon" type="image/png" href="circle-Image_fx__1_-removebg-preview.png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* EXACT STYLES FROM PROVIDED CODE */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            transition: background-color 0.3s, color 0.3s, border-color 0.3s;
+        }
+
+        /* Theme Variables */
+        :root {
+            /* Black & Gold Theme */
+            --bg-black-gold: #0a0a0a;
+            --container-bg-black-gold: #121212;
+            --accent-color-black-gold: #d4af37;
+            --accent-light-black-gold: #ffd700;
+            --text-primary-black-gold: #e0e0e0;
+            --text-secondary-black-gold: #b0b0b0;
+            --input-bg-black-gold: #1a1a1a;
+            --input-border-black-gold: #d4af37;
+            --border-color-black-gold: #333;
+
+            /* White & Blue Theme */
+            --bg-white-blue: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            --container-bg-white-blue: #ffffff;
+            --accent-color-white-blue: #1e6fd9;
+            --accent-light-white-blue: #2a8bf2;
+            --text-primary-white-blue: #333;
+            --text-secondary-white-blue: #475569;
+            --input-bg-white-blue: #ffffff;
+            --input-border-white-blue: #cbd5e1;
+            --border-color-white-blue: #e2e8f0;
+        }
+
+        body {
+            min-height: 100vh;
+            transition: all 0.3s;
+        }
+
+        /* Theme Base Styles */
+        body.black-gold-theme {
+            background-color: var(--bg-black-gold);
+            color: var(--text-primary-black-gold);
+        }
+
+        body.white-blue-theme {
+            background: var(--bg-white-blue);
+            color: var(--text-primary-white-blue);
+        }
+
+        /* Theme Switcher - On Right Side */
+        .theme-switcher {
+            position: fixed;
+            top: 30px;
+            right: 30px;
+            z-index: 10000;
+        }
+
+        .theme-btn {
+            background-color: #333;
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 20px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-weight: 500;
+            font-size: 0.85rem;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+            transition: all 0.3s;
+        }
+
+        .theme-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        }
+
+        .theme-btn.black-gold {
+            background-color: #d4af37;
+            color: #0a0a0a;
+        }
+
+        .theme-btn.white-blue {
+            background-color: #1e6fd9;
+            color: white;
+        }
+
+        /* Navigation */
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            padding: 25px 50px;
+            z-index: 1000;
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+        }
+
+        .black-gold-theme .navbar {
+            background: rgba(10, 10, 10, 0.9);
+            border-bottom: 1px solid rgba(212, 175, 55, 0.2);
+        }
+
+        .white-blue-theme .navbar {
+            background: rgba(255, 255, 255, 0.9);
+            border-bottom: 1px solid rgba(30, 111, 217, 0.2);
+        }
+
+        .nav-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        /* Logo on Left */
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex: 1;
+        }
+
+        .logo-image {
+            width: 40px;
+            height: 40px;
+            object-fit: contain;
+            transition: all 0.3s;
+        }
+
+        .logo-text {
+            font-size: 1.8rem;
+            font-weight: 700;
+            text-decoration: none;
+        }
+
+        .black-gold-theme .logo-text {
+            color: white;
+        }
+
+        .white-blue-theme .logo-text {
+            color: #1e3a8a;
+        }
+
+        /* Navigation Links Centered */
+        .nav-links {
+            display: flex;
+            gap: 40px;
+            align-items: center;
+            flex: 2;
+            justify-content: center;
+        }
+
+        .nav-link {
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1rem;
+            position: relative;
+            padding: 8px 0;
+            transition: all 0.3s;
+        }
+
+        /* Current Page Highlight */
+        .nav-link.active::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 2px;
+        }
+
+        .black-gold-theme .nav-link {
+            color: var(--text-primary-black-gold);
+        }
+
+        .black-gold-theme .nav-link.active::after {
+            background: var(--accent-color-black-gold);
+        }
+
+        .white-blue-theme .nav-link {
+            color: var(--text-primary-white-blue);
+        }
+
+        .white-blue-theme .nav-link.active::after {
+            background: var(--accent-color-white-blue);
+        }
+
+        .nav-link:hover {
+            opacity: 0.8;
+        }
+
+        /* Empty Content Area */
+        .content {
+            min-height: 100vh;
+            padding-top: 120px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .placeholder-text {
+            font-size: 2rem;
+            font-weight: 300;
+            opacity: 0.5;
+        }
+
+        /* Responsive adjustments */
+        .cta-section {
+            text-align: center;
+        }
+
+        @media (max-width: 768px) {
+            .navbar {
+                padding: 20px;
+            }
+
+            .nav-links {
+                gap: 20px;
+            }
+
+            .nav-link {
+                font-size: 0.9rem;
+            }
+
+            .logo-text {
+                font-size: 1.5rem;
+            }
+
+            .theme-switcher {
+                top: 20px;
+                right: 20px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .theme-btn {
+                padding: 6px 10px;
+                font-size: 0.8rem;
+            }
+
+            .nav-links {
+                gap: 15px;
+            }
+        }
+
+        /* --- NEW PAGE STYLES --- */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            width: 100%;
+        }
+
+        .section {
+            padding: 80px 0;
+        }
+
+        .section-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: 50px;
+            line-height: 1.2;
+        }
+
+        .highlight {
+            color: var(--accent-color-black-gold);
+        }
+
+        .white-blue-theme .highlight {
+            color: var(--accent-color-white-blue);
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 12px 30px;
+            border-radius: 50px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s;
+            font-size: 1.1rem;
+            cursor: pointer;
+            border: none;
+        }
+
+        .btn-primary {
+            background: linear-gradient(45deg, var(--accent-color-black-gold), var(--accent-light-black-gold));
+            color: #0a0a0a;
+            box-shadow: 0 4px 15px rgba(212, 175, 55, 0.3);
+        }
+
+        .white-blue-theme .btn-primary {
+            background: linear-gradient(45deg, var(--accent-color-white-blue), var(--accent-light-white-blue));
+            color: white;
+            box-shadow: 0 4px 15px rgba(30, 111, 217, 0.3);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Hero Section */
+        .hero-section {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding-top: 80px;
+            /* offset for navbar */
+        }
+
+        .hero-title {
+            font-size: 3.5rem;
+            font-weight: 800;
+            margin-bottom: 20px;
+            line-height: 1.1;
+            background: -webkit-linear-gradient(45deg, #fff, #aaa);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .black-gold-theme .hero-title {
+            background: -webkit-linear-gradient(45deg, #fff, #d4af37);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .white-blue-theme .hero-title {
+            background: -webkit-linear-gradient(45deg, #1a1a1a, #1e6fd9);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero-subtitle {
+            font-size: 1.25rem;
+            max-width: 800px;
+            margin: 0 auto 40px;
+            opacity: 0.8;
+            line-height: 1.6;
+        }
+
+        /* Problem Section */
+        .problem-section {
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        .white-blue-theme .problem-section {
+            background: rgba(0, 0, 0, 0.02);
+        }
+
+        .text-danger {
+            color: #ff4d4d;
+        }
+
+        .white-blue-theme .text-danger {
+            color: #dc2626;
+        }
+
+        .grid-4 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+        }
+
+        .card {
+            padding: 30px;
+            border-radius: 16px;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            transition: transform 0.3s;
+            text-align: center;
+        }
+
+        .white-blue-theme .card {
+            background: rgba(255, 255, 255, 0.8);
+            border: 1px solid rgba(0, 0, 0, 0.05);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+        }
+
+        .card-icon {
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+            color: var(--accent-color-black-gold);
+        }
+
+        .white-blue-theme .card-icon {
+            color: var(--accent-color-white-blue);
+        }
+
+        .card h3 {
+            margin-bottom: 15px;
+            font-size: 1.2rem;
+        }
+
+        .card p {
+            font-size: 0.95rem;
+            opacity: 0.7;
+            line-height: 1.5;
+        }
+
+        /* Features Section */
+        .feature-item {
+            text-align: center;
+            padding: 20px;
+        }
+
+        .feature-icon {
+            font-size: 3rem;
+            margin-bottom: 20px;
+            background: -webkit-linear-gradient(45deg, var(--accent-color-black-gold), var(--accent-light-black-gold));
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .white-blue-theme .feature-icon {
+            background: -webkit-linear-gradient(45deg, var(--accent-color-white-blue), var(--accent-light-white-blue));
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* Roadmap Section */
+        .roadmap-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            position: relative;
+            max-width: 1000px;
+            margin: 60px auto 0;
+        }
+
+        .roadmap-step {
+            flex: 1;
+            text-align: center;
+            padding: 0 15px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .step-number {
+            width: 50px;
+            height: 50px;
+            background: var(--container-bg-black-gold);
+            border: 2px solid var(--accent-color-black-gold);
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 0 auto 20px;
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--accent-color-black-gold);
+        }
+
+        .white-blue-theme .step-number {
+            background: white;
+            border-color: var(--accent-color-white-blue);
+            color: var(--accent-color-white-blue);
+        }
+
+        .roadmap-line {
+            flex-grow: 1;
+            height: 2px;
+            background: rgba(255, 255, 255, 0.1);
+            margin-top: 25px;
+            /* Half of step-number height */
+            z-index: 1;
+        }
+
+        .white-blue-theme .roadmap-line {
+            background: rgba(0, 0, 0, 0.1);
+        }
+
+        /* Footer */
+        .footer {
+            padding: 50px 0;
+            text-align: center;
+            background: #050505;
+            margin-top: 50px;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .white-blue-theme .footer {
+            background: #f8fafc;
+            border-top: 1px solid rgba(0, 0, 0, 0.05);
+        }
+
+        .social-links {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .social-link {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.05);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            text-decoration: none;
+            font-size: 1.2rem;
+            transition: all 0.3s;
+        }
+
+        .white-blue-theme .social-link {
+            background: rgba(0, 0, 0, 0.05);
+            color: #333;
+        }
+
+        .social-link:hover {
+            background: var(--accent-color-black-gold);
+            color: black;
+            transform: translateY(-3px);
+        }
+
+        .white-blue-theme .social-link:hover {
+            background: var(--accent-color-white-blue);
+        }
+
+        .footer-links {
+            opacity: 0.6;
+            font-size: 0.9rem;
+        }
+
+        /* Pricing Section */
+        .pricing-section {
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        .white-blue-theme .pricing-section {
+            background: rgba(0, 0, 0, 0.02);
+        }
+
+        .price-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 16px;
+            padding: 40px 30px;
+            text-align: center;
+            transition: transform 0.3s, border-color 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .white-blue-theme .price-card {
+            background: white;
+            border: 1px solid rgba(0, 0, 0, 0.05);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        }
+
+        .price-card:hover {
+            transform: translateY(-10px);
+            border-color: var(--accent-color-black-gold);
+        }
+
+        .white-blue-theme .price-card:hover {
+            border-color: var(--accent-color-white-blue);
+        }
+
+        .price-card.popular {
+            border-color: var(--accent-color-black-gold);
+            background: linear-gradient(180deg, rgba(212, 175, 55, 0.05) 0%, rgba(255, 255, 255, 0.03) 100%);
+        }
+
+        .white-blue-theme .price-card.popular {
+            border-color: var(--accent-color-white-blue);
+            background: linear-gradient(180deg, rgba(30, 111, 217, 0.05) 0%, white 100%);
+        }
+
+        .plan-name {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+            color: var(--text-primary-black-gold);
+        }
+
+        .white-blue-theme .plan-name {
+            color: var(--text-primary-white-blue);
+        }
+
+        .price {
+            font-size: 3rem;
+            font-weight: 800;
+            margin-bottom: 10px;
+            color: var(--accent-color-black-gold);
+        }
+
+        .white-blue-theme .price {
+            color: var(--accent-color-white-blue);
+        }
+
+        .price span {
+            font-size: 1rem;
+            font-weight: 400;
+            color: var(--text-secondary-black-gold);
+        }
+
+        .white-blue-theme .price span {
+            color: var(--text-secondary-white-blue);
+        }
+
+        .price-features {
+            list-style: none;
+            margin: 30px 0;
+            text-align: left;
+        }
+
+        .price-features li {
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 0.95rem;
+            opacity: 0.8;
+        }
+
+        .price-features i {
+            color: var(--accent-color-black-gold);
+        }
+
+        .white-blue-theme .price-features i {
+            color: var(--accent-color-white-blue);
+        }
+
+        .discount-badge {
+            position: absolute;
+            top: 20px;
+            right: -30px;
+            background: var(--accent-color-black-gold);
+            color: black;
+            padding: 5px 30px;
+            transform: rotate(45deg);
+            font-size: 0.8rem;
+            font-weight: 700;
+        }
+
+        .white-blue-theme .discount-badge {
+            background: var(--accent-color-white-blue);
+            color: white;
+        }
+
+        .old-price {
+            text-decoration: line-through;
+            opacity: 0.5;
+            font-size: 1.2rem;
+            margin-right: 10px;
+        }
+
+        /* Contact Form Styles */
+        .page-section {
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .page-section.active-page {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .contact-form-container {
+            max-width: 700px;
+            margin: 0 auto;
+            padding: 40px;
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
+        }
+
+        .white-blue-theme .contact-form-container {
+            background: white;
+            border: 1px solid rgba(0, 0, 0, 0.05);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+            text-align: left;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: 500;
+            font-size: 0.95rem;
+            opacity: 0.9;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 15px;
+            border-radius: 10px;
+            border: 1px solid var(--border-color-black-gold);
+            background: var(--input-bg-black-gold);
+            color: var(--text-primary-black-gold);
+            font-size: 1rem;
+            transition: all 0.3s;
+            outline: none;
+        }
+
+        .white-blue-theme .form-control {
+            border-color: var(--input-border-white-blue);
+            background: var(--input-bg-white-blue);
+            color: var(--text-primary-white-blue);
+        }
+
+        .form-control:focus {
+            border-color: var(--accent-color-black-gold);
+            box-shadow: 0 0 0 2px rgba(212, 175, 55, 0.2);
+        }
+
+        .white-blue-theme .form-control:focus {
+            border-color: var(--accent-color-white-blue);
+            box-shadow: 0 0 0 2px rgba(30, 111, 217, 0.2);
+        }
+
+        textarea.form-control {
+            min-height: 150px;
+            resize: vertical;
+        }
+
+        /* Notification Toast */
+        .toast-notification {
+            position: fixed;
+            top: 100px;
+            right: 30px;
+            background: #10b981;
+            color: white;
+            padding: 20px 30px;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            z-index: 9999;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            transform: translateX(200%);
+            transition: transform 0.5s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+        }
+
+        .toast-notification.show {
+            transform: translateX(0);
+        }
+
+        .toast-icon {
+            font-size: 1.5rem;
+        }
+
+        .disclaimer {
+            margin-top: 10px;
+            font-size: 0.8rem;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        @media (max-width: 768px) {
+            .hero-title {
+                font-size: 2.5rem;
+            }
+
+            .roadmap-container {
+                flex-direction: column;
+                align-items: center;
+                gap: 30px;
+            }
+
+            .roadmap-line {
+                display: none;
+            }
+
+            .roadmap-step {
+                margin-bottom: 20px;
+            }
+        }
+
+        /* Q&A Accordion Styles */
+        .qa-container {
+            max-width: 800px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            padding: 20px;
+        }
+
+        .qa-item {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .white-blue-theme .qa-item {
+            background: white;
+            border: 1px solid rgba(0, 0, 0, 0.05);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+        }
+
+        .qa-question {
+            padding: 20px 25px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: 600;
+            font-size: 1.1rem;
+            color: var(--text-primary-black-gold);
+            user-select: none;
+        }
+
+        .white-blue-theme .qa-question {
+            color: var(--text-primary-white-blue);
+        }
+
+        .qa-question:hover {
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        .question-icon {
+            transition: transform 0.3s ease;
+            color: var(--accent-color-black-gold);
+        }
+
+        .white-blue-theme .question-icon {
+            color: var(--accent-color-white-blue);
+        }
+
+        .qa-item.active .question-icon {
+            transform: rotate(180deg);
+        }
+
+        .qa-answer {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease, padding 0.3s ease;
+            color: var(--text-secondary-black-gold);
+            font-size: 0.95rem;
+            line-height: 1.6;
+        }
+
+        .white-blue-theme .qa-answer {
+            color: var(--text-secondary-white-blue);
+        }
+
+        .qa-item.active .qa-answer {
+            /* max-height handled by JS */
+            padding: 0 25px 25px;
+        }
+
+        /* Blog Page Styles */
+        .blog-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .blog-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 30px;
+            margin-bottom: 50px;
+        }
+
+        .blog-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 16px;
+            overflow: hidden;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .white-blue-theme .blog-card {
+            background: white;
+            border: 1px solid rgba(0, 0, 0, 0.05);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+        }
+
+        .blog-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .blog-media {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            display: block;
+        }
+
+        .blog-media-container {
+            width: 100%;
+            height: 200px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .blog-media-container iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        .blog-content {
+            padding: 25px;
+        }
+
+        .blog-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin-bottom: 15px;
+            color: var(--text-primary-black-gold);
+        }
+
+        .white-blue-theme .blog-title {
+            color: var(--text-primary-white-blue);
+        }
+
+        .blog-meta {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+            font-size: 0.9rem;
+            opacity: 0.7;
+        }
+
+        .blog-date {
+            margin-right: 15px;
+        }
+
+        .blog-article {
+            font-size: 1rem;
+            line-height: 1.6;
+            color: var(--text-secondary-black-gold);
+        }
+
+        .white-blue-theme .blog-article {
+            color: var(--text-secondary-white-blue);
+        }
+
+        .blog-loading {
+            text-align: center;
+            padding: 50px 0;
+            font-size: 1.2rem;
+            opacity: 0.7;
+        }
+
+        .blog-error {
+            text-align: center;
+            padding: 50px 0;
+            font-size: 1.2rem;
+            color: #ff4d4d;
+        }
+
+        .blog-load-more {
+            text-align: center;
+            margin-top: 30px;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        /* Modal Styles for Expanded Blog Posts */
+        .blog-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            z-index: 2000;
+            display: none;
+            justify-content: center;
+            align-items: center;
+            backdrop-filter: blur(10px);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .blog-modal.show {
+            display: flex;
+            opacity: 1;
+        }
+
+        .modal-container {
+            width: 90%;
+            max-width: 1000px;
+            max-height: 90vh;
+            background: var(--container-bg-black-gold);
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            border-radius: 20px;
+            overflow-y: auto;
+            position: relative;
+            box-shadow: 0 0 50px rgba(0, 0, 0, 0.5);
+        }
+
+        .white-blue-theme .modal-container {
+            background: white;
+            border-color: rgba(30, 111, 217, 0.3);
+        }
+
+        .modal-close {
+            position: fixed;
+            top: 30px;
+            right: 30px;
+            color: white;
+            font-size: 2rem;
+            cursor: pointer;
+            z-index: 2001;
+            transition: transform 0.3s;
+        }
+
+        .modal-close:hover {
+            transform: scale(1.1);
+            color: var(--accent-color-black-gold);
+        }
+
+        .white-blue-theme .modal-close:hover {
+            color: var(--accent-color-white-blue);
+        }
+
+        .modal-nav {
+            position: fixed;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 60px;
+            height: 60px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+            z-index: 2001;
+            transition: all 0.3s;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .modal-nav:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-50%) scale(1.1);
+        }
+
+        .modal-nav.prev {
+            left: 40px;
+        }
+
+        .modal-nav.next {
+            right: 40px;
+        }
+
+        .modal-media {
+            width: 100%;
+            max-height: 500px;
+            object-fit: contain;
+            background: #000;
+        }
+
+        .modal-content {
+            padding: 40px;
+        }
+
+        .modal-title {
+            font-size: 2.5rem;
+            font-weight: 800;
+            margin-bottom: 20px;
+            line-height: 1.2;
+        }
+
+        .modal-meta {
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .white-blue-theme .modal-meta {
+            border-bottom-color: rgba(0, 0, 0, 0.1);
+        }
+
+        .modal-text {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            opacity: 0.9;
+        }
+
+        @media (max-width: 1100px) {
+            .modal-nav {
+                width: 45px;
+                height: 45px;
+                font-size: 1.2rem;
+            }
+
+            .modal-nav.prev {
+                left: 10px;
+            }
+
+            .modal-nav.next {
+                right: 10px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .modal-nav {
+                display: none;
+            }
+
+            .modal-title {
+                font-size: 1.8rem;
+            }
+        }
+    </style>
+</head>
+
+<body class="black-gold-theme">
+    <!-- Theme Switcher - Right Side -->
+    <div class="theme-switcher">
+        <button class="theme-btn black-gold" id="themeToggle">
+            <i class="fas fa-sun"></i>
+            <span>Switch Theme</span>
+        </button>
+    </div>
+
+    <!-- Toast Notification -->
+    <div class="toast-notification" id="successToast">
+        <i class="fas fa-check-circle toast-icon"></i>
+        <span>We received your message and will get back to you shortly!</span>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <!-- Logo on Left -->
+            <div class="logo-container">
+                <img src="circle-Image_fx__1_-removebg-preview.png" alt="IQuant Logo" class="logo-image">
+
+                <span class="logo-text">IQuant</span>
+            </div>
+
+            <!-- Navigation Links Centered -->
+            <div class="nav-links">
+                <a href="#" class="nav-link active" data-page="home">Home</a>
+                <a href="#" class="nav-link" data-page="qa">Q&A</a>
+                <a href="#" class="nav-link" data-page="blog">Blog</a>
+                <a href="#" class="nav-link" data-page="download">Download</a>
+            </div>
+
+            <!-- Empty div for spacing on right -->
+            <div style="flex: 1;"></div>
+        </div>
+    </nav>
+
+    <div id="home-page" class="page-section active-page">
+        <!-- Hero Section -->
+        <section class="hero-section">
+            <div class="container">
+                <h1 class="hero-title">Make Smarter Financial Decisions <br> <span class="highlight">Using Real Economic
+                        Data</span></h1>
+                <p class="hero-subtitle">A financial advisory app that helps you understand market direction using
+                    inflation, interest rates, and economic cycles — not guesswork.</p>
+                <a href="#" class="btn btn-primary" data-page="download">Join Us</a>
+            </div>
+        </section>
+
+        <!-- Problem Section -->
+        <section class="section problem-section">
+            <div class="container">
+                <h2 class="section-title">Most traders lose because they trade <span class="text-danger">blindly</span>.
+                </h2>
+                <div class="grid-4">
+                    <div class="card">
+                        <i class="fas fa-eye-slash card-icon"></i>
+                        <h3>Ignoring Macro</h3>
+                        <p>Trading without understanding the bigger economic picture leads to unexpected losses.</p>
+                    </div>
+                    <div class="card">
+                        <i class="fas fa-chart-pie card-icon"></i>
+                        <h3>Data Overload</h3>
+                        <p>Drowning in noise and contradictory signals instead of focusing on key drivers.</p>
+                    </div>
+                    <div class="card">
+                        <i class="fas fa-random card-icon"></i>
+                        <h3>Guessing Games</h3>
+                        <p>Relying on gut feelings rather than data-driven probabilities and trends.</p>
+                    </div>
+                    <div class="card">
+                        <i class="fas fa-exclamation-triangle card-icon"></i>
+                        <h3>Poor Risk Management</h3>
+                        <p>Exposing portfolio to unnecessary risks during volatile economic regimes.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Solution Section -->
+        <section class="section solution-section">
+            <div class="container">
+                <h2 class="section-title">With IQuant, Turn your insights into <span class="highlight">Action</span>
+                </h2>
+            </div>
+        </section>
+
+        <!-- Features Section -->
+        <section class="section features-section">
+            <div class="container">
+                <div class="grid-4">
+                    <div class="feature-item">
+                        <i class="fas fa-globe feature-icon"></i>
+                        <h3>Global Macro Overview</h3>
+                        <p>Comprehensive analysis of global economic conditions.</p>
+                    </div>
+                    <div class="feature-item">
+                        <i class="fas fa-sync-alt feature-icon"></i>
+                        <h3>Economic Cycle Tracking</h3>
+                        <p>Identify where we are in the business cycle.</p>
+                    </div>
+                    <div class="feature-item">
+                        <i class="fas fa-university feature-icon"></i>
+                        <h3>Central Bank Analysis</h3>
+                        <p>Insights into monetary policy and rate decisions.</p>
+                    </div>
+                    <div class="feature-item">
+                        <i class="fas fa-shield-alt feature-icon"></i>
+                        <h3>Risk Aware Guidance</h3>
+                        <p>Strategies tailored to current market risks.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- How It Works (Roadmap) Section -->
+        <section class="section roadmap-section">
+            <div class="container">
+                <h2 class="section-title">How It Works</h2>
+                <div class="roadmap-container">
+                    <div class="roadmap-step">
+                        <div class="step-number">1</div>
+                        <p>We analyze macroeconomic indicators.</p>
+                    </div>
+                    <div class="roadmap-line"></div>
+                    <div class="roadmap-step">
+                        <div class="step-number">2</div>
+                        <p>We identify economic regimes.</p>
+                    </div>
+                    <div class="roadmap-line"></div>
+                    <div class="roadmap-step">
+                        <div class="step-number">3</div>
+                        <p>We translate data into clear guidance.</p>
+                    </div>
+                    <div class="roadmap-line"></div>
+                    <div class="roadmap-step">
+                        <div class="step-number">4</div>
+                        <p>You can make informed trading decisions.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Pricing Section -->
+        <section class="section pricing-section">
+            <div class="container">
+                <h2 class="section-title">Choose Your Plan</h2>
+                <div class="grid-4" style="grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));">
+                    <!-- Free Trial -->
+                    <div class="price-card">
+                        <h3 class="plan-name">Free Trial</h3>
+                        <div class="price">0€</div>
+                        <ul class="price-features">
+                            <li><i class="fas fa-check"></i> All Features Included</li>
+                            <li><i class="fas fa-check"></i> 1 Month Access</li>
+                            <li><i class="fas fa-check"></i> No Credit Card Required</li>
+                            <li><i class="fas fa-exclamation-circle"></i> One time per device</li>
+                        </ul>
+                        <a href="#" class="btn btn-primary" data-page="download">Start Free</a>
+                    </div>
+
+                    <!-- Silver Plan -->
+                    <div class="price-card">
+                        <h3 class="plan-name">Silver Plan</h3>
+                        <div class="price">30€</div>
+                        <ul class="price-features">
+                            <li><i class="fas fa-check"></i> Full Data Access</li>
+                            <li><i class="fas fa-check"></i> 1 Month + 1 Month Free*</li>
+                            <li><i class="fas fa-check"></i> *First Purchase Only</li>
+                            <li><i class="fas fa-check"></i> Cancel Anytime</li>
+                        </ul>
+                        <a href="#" class="btn btn-primary" data-page="download">Get Silver</a>
+                    </div>
+
+                    <!-- Gold Plan -->
+                    <div class="price-card popular">
+                        <div class="discount-badge">SAVE 22%</div>
+                        <h3 class="plan-name">Gold Plan</h3>
+                        <div class="price">
+                            <span class="old-price">90€</span>70€
+                        </div>
+                        <ul class="price-features">
+                            <li><i class="fas fa-check"></i> Full Data Access</li>
+                            <li><i class="fas fa-check"></i> 3 Months + 3 Months Free*</li>
+                            <li><i class="fas fa-check"></i> *First Purchase Only</li>
+                            <li><i class="fas fa-star"></i> Best Value</li>
+                        </ul>
+                        <a href="#" class="btn btn-primary" data-page="download">Get Gold</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Bottom CTA Section -->
+        <section class="section cta-section">
+            <div class="container">
+                <h2 class="section-title">Stop Guessing, Start understanding the market</h2>
+                <a href="#" class="btn btn-primary" data-page="download">Join Us</a>
+            </div>
+        </section>
+    </div>
+
+    <!-- 2. Q&A PAGE -->
+    <div id="qa-page" class="page-section">
+        <section class="hero-section">
+            <div class="container">
+                <h1 class="hero-title">Frequently Asked <span class="highlight">Questions</span></h1>
+                <p class="hero-subtitle">Find answers to common questions about IQuant, our features, and membership
+                    plans.</p>
+
+                <div class="qa-container">
+                    <!-- Q1 -->
+                    <div class="qa-item">
+                        <div class="qa-question">
+                            What is IQuant?
+                            <i class="fas fa-chevron-down question-icon"></i>
+                        </div>
+                        <div class="qa-answer">
+                            <p>IQuant is a macroeconomic trading and market analysis platform designed to help traders
+                                understand and trade financial markets using real economic data, not speculation.</p>
+                            <br>
+                            <p>The platform focuses on top-down macro analysis, combining key global indicators such as:
+                            </p>
+                            <ul style="list-style-type: disc; padding-left: 20px; margin: 10px 0;">
+                                <li>Central bank interest rates</li>
+                                <li>Inflation and economic growth</li>
+                                <li>Liquidity and money supply (M2)</li>
+                                <li>Government bond yields</li>
+                                <li>Central bank balance sheets</li>
+                                <li>Economic and market cycles</li>
+                            </ul>
+                            <p>By integrating these indicators into a structured analytical model, IQuant provides
+                                high-quality trading signals and market insights for forex, gold, and macro-sensitive
+                                assets.</p>
+                            <br>
+                            <p>Unlike traditional trading systems that rely mainly on technical indicators, IQuant
+                                connects macroeconomics with price action, allowing traders to see the bigger picture
+                                and trade in the direction of underlying economic forces.</p>
+                            <br>
+                            <p><strong>IQuant is built for:</strong></p>
+                            <ul style="list-style-type: disc; padding-left: 20px; margin: 10px 0;">
+                                <li>Traders seeking institutional-style macro insights</li>
+                                <li>Investors who want data-driven decision making</li>
+                                <li>Users who want to understand why markets move, not just where price goes</li>
+                            </ul>
+                            <p>In short, IQuant helps traders trade economic cycles, not market noise.</p>
+                        </div>
+                    </div>
+
+                    <!-- Q2 -->
+                    <div class="qa-item">
+                        <div class="qa-question">
+                            How does the Free Trial work?
+                            <i class="fas fa-chevron-down question-icon"></i>
+                        </div>
+                        <div class="qa-answer">
+                            <div style="display: flex; flex-direction: column; gap: 15px;">
+                                <div>
+                                    <strong>Trial Activation</strong>
+                                    <p>Users subscribe through our platform to activate their free trial. Upon
+                                        subscription, we automatically collect the Hardware ID (HWID) of their device to
+                                        ensure fair usage and prevent trial abuse.</p>
+                                </div>
+                                <div>
+                                    <strong>Single Demo Account Policy</strong>
+                                    <p>Each user is allocated exactly one demo account tied to their HWID. This ensures:
+                                    </p>
+                                    <ul style="list-style-type: disc; padding-left: 20px; margin: 5px 0;">
+                                        <li>One trial per user/device</li>
+                                        <li>Prevents creation of multiple trial accounts</li>
+                                        <li>Maintains system integrity and fairness</li>
+                                    </ul>
+                                </div>
+                                <div>
+                                    <strong>Trading Recommendation</strong>
+                                    <p>We strongly advise all users to trade exclusively on the demo account during
+                                        their free trial period. This allows you to:</p>
+                                    <ul style="list-style-type: disc; padding-left: 20px; margin: 5px 0;">
+                                        <li>Test all platform features risk-free</li>
+                                        <li>Practice with simulated market conditions</li>
+                                        <li>Develop and refine trading strategies</li>
+                                        <li>Familiarize yourself with our quantitative tools</li>
+                                    </ul>
+                                </div>
+                                <div>
+                                    <strong>Why HWID Collection?</strong>
+                                    <ul style="list-style-type: disc; padding-left: 20px; margin: 5px 0;">
+                                        <li>Ensures legitimate users get full trial access</li>
+                                        <li>Prevents trial exploitation</li>
+                                        <li>Maintains platform security</li>
+                                        <li>Supports fair resource allocation</li>
+                                    </ul>
+                                </div>
+                                <div>
+                                    <strong>Trial Benefits</strong>
+                                    <p>During your free trial, you'll have access to:</p>
+                                    <ul style="list-style-type: disc; padding-left: 20px; margin: 5px 0;">
+                                        <li>Full platform features</li>
+                                        <li>Real-time market data</li>
+                                        <li>Strategy backtesting tools</li>
+                                        <li>Demo trading with virtual funds</li>
+                                        <li>All quantitative analysis tools</li>
+                                    </ul>
+                                </div>
+                                <div>
+                                    <strong>Important Notes</strong>
+                                    <ul style="list-style-type: disc; padding-left: 20px; margin: 5px 0;">
+                                        <li>Your trial is linked to your specific device (HWID)</li>
+                                        <li>Trading on demo is mandatory during trial</li>
+                                        <li>No real funds are required or accepted during trial</li>
+                                        <li>Trial period duration is specified upon subscription</li>
+                                    </ul>
+                                </div>
+                                <p>This system ensures every legitimate user gets a proper testing experience while
+                                    maintaining platform security and preventing abuse.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Q3 -->
+                    <div class="qa-item">
+                        <div class="qa-question">
+                            What data sources do you use?
+                            <i class="fas fa-chevron-down question-icon"></i>
+                        </div>
+                        <div class="qa-answer">
+                            <p>IQuant uses reliable, institutional-grade data sources to ensure accuracy, consistency,
+                                and transparency in its macroeconomic analysis and trading signals.</p>
+                            <br>
+                            <p>The platform aggregates and processes data from multiple trusted providers, including:
+                            </p>
+                            <div style="display: flex; flex-direction: column; gap: 10px; margin-top: 10px;">
+                                <div>
+                                    <strong>FRED (Federal Reserve Economic Data)</strong>
+                                    <p>Used for macroeconomic indicators such as interest rates, inflation, GDP, money
+                                        supply (M2), and central bank balance sheet data.</p>
+                                </div>
+                                <div>
+                                    <strong>Trading Economics</strong>
+                                    <p>Provides global economic data, country-level indicators, forecasts, and
+                                        historical time series across developed and emerging markets.</p>
+                                </div>
+                                <div>
+                                    <strong>CFTC (Commitments of Traders – COT reports)</strong>
+                                    <p>Used to analyze market positioning and sentiment of institutional traders, hedge
+                                        funds, and commercial participants.</p>
+                                </div>
+                                <div>
+                                    <strong>TradingView</strong>
+                                    <p>Used for market price data, technical confirmation, and cross-market analysis
+                                        across forex, commodities, and indices.</p>
+                                </div>
+                                <div>
+                                    <strong>Additional public and financial data sources</strong>
+                                    <p>Including central bank publications, official statistical agencies, and market
+                                        data providers to enhance model robustness and cross-validation.</p>
+                                </div>
+                            </div>
+                            <br>
+                            <p>By combining these data sources, IQuant creates a unified macroeconomic framework that
+                                links economic fundamentals, market positioning, and price behavior into a single
+                                decision-making system.</p>
+                            <br>
+                            <p>This multi-source approach allows IQuant to deliver data-driven, macro-aligned trading
+                                insights that reflect real economic conditions rather than short-term market noise.</p>
+                        </div>
+                    </div>
+
+                    <!-- Q4 -->
+                    <div class="qa-item">
+                        <div class="qa-question">
+                            How flexible is the IQuant subscription plan?
+                            <i class="fas fa-chevron-down question-icon"></i>
+                        </div>
+                        <div class="qa-answer">
+                            At IQuant, we offer flexible subscription plans tailored to your trading needs. You can
+                            upgrade, pause, or adjust your plan at any time to match your trading schedule and goals.
+                            This ensures you always have continuous access to market insights, signals, and
+                            macroeconomic analysis without committing to a rigid plan.
+                        </div>
+                    </div>
+
+                    <!-- Q5 -->
+                    <div class="qa-item">
+                        <div class="qa-question">
+                            Do I need to be an expert trader?
+                            <i class="fas fa-chevron-down question-icon"></i>
+                        </div>
+                        <div class="qa-answer">
+                            <p>At IQuant, you don't need to be an expert, but a solid understanding of the assets you
+                                trade—such as leverage, lot size, and margin—is important. Traders should also be
+                                disciplined and follow a structured approach to risk management.</p>
+                            <br>
+                            <p>We highly encourage continuous learning, and our platform provides tools and insights to
+                                help you improve your trading knowledge and decision-making over time.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- 3. BLOG PAGE -->
+    <div id="blog-page" class="page-section">
+        <section class="hero-section">
+            <div class="container">
+                <h1 class="hero-title">IQuant <span class="highlight">Blog</span></h1>
+                <p class="hero-subtitle">Insights, analysis, and market updates from our team of experts.</p>
+
+                <div class="blog-container">
+                    <div id="blog-loading" class="blog-loading">Loading blog posts...</div>
+                    <div id="blog-error" class="blog-error hidden">Failed to load blog posts. Please try again later.
+                    </div>
+                    <div id="blog-grid" class="blog-grid hidden"></div>
+                    <div id="blog-load-more" class="blog-load-more hidden">
+                        <button id="show-more-btn" class="btn btn-primary">Show More</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- 4. DOWNLOAD PAGE -->
+    <div id="download-page" class="page-section">
+        <section class="hero-section" style="min-height: 50vh; padding-top: 150px;">
+            <div class="container">
+                <h1 class="hero-title" style="font-size: 3rem;">Download the IQuant App</h1>
+                <p class="hero-subtitle">Start making data-driven macroeconomic trading decisions today.</p>
+                <a href="https://github.com/iquantservices-creator/iquant/releases/download/v1.0.0/IQuant.exe"
+                    class="btn btn-primary" style="margin-top: 20px; font-size: 1.2rem;" download>
+                    <i class="fas fa-download" style="margin-right: 10px;"></i>
+                    Download IQuant v1.0.0 (Windows)
+                </a>
+                <p class="disclaimer" style="margin-top: 20px;">File size: ~50MB. Requires Windows 10 or later.</p>
+            </div>
+        </section>
+
+        <section class="section" style="padding-top: 0;">
+            <div class="container" style="max-width: 800px;">
+                <h2 class="section-title" style="margin-bottom: 30px;">See the App in Action</h2>
+                <div class="blog-media-container" style="height: 450px; margin-bottom: 50px;">
+                    <!-- Placeholder for YouTube Video. User will provide the link later. -->
+                    <iframe id="download-video-placeholder"
+                        src="https://www.youtube.com/embed/dQw4w9WgXcQ"#channgethis
+                        frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                        allowfullscreen></iframe>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- Blog Modal for Expanded View -->
+    <div id="blog-modal" class="blog-modal">
+        <div class="modal-close" id="modal-close">&times;</div>
+
+        <div class="modal-nav prev" id="modal-prev">
+            <i class="fas fa-chevron-left"></i>
+        </div>
+
+        <div class="modal-nav next" id="modal-next">
+            <i class="fas fa-chevron-right"></i>
+        </div>
+
+        <div class="modal-container" id="modal-container">
+            <div id="modal-media-placeholder"></div>
+            <div class="modal-content">
+                <h2 class="modal-title" id="modal-title"></h2>
+                <div class="modal-meta" id="modal-meta"></div>
+                <div class="modal-text" id="modal-text"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="social-links">
+                <a href="https://www.youtube.com/channel/UCwhpLGAdONOo55O4vus5EYA" target="_blank"
+                    class="social-link"><i class="fab fa-youtube"></i></a>
+                <a href="https://www.tiktok.com/@iquantt?is_from_webapp=1&sender_device=pc" target="_blank"
+                    class="social-link"><i class="fab fa-tiktok"></i></a>
+                <a href="https://t.me/IQuantsupport" target="_blank" class="social-link"><i
+                        class="fab fa-telegram"></i></a>
+            </div>
+            <div class="footer-links">
+                <p>&copy; 2024 IQuant. All rights reserved.</p>
+                <p class="disclaimer">Disclaimer: Financial trading involves risk. Past performance is not indicative of
+                    future results.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Load saved theme preference from localStorage
+        function loadThemePreference() {
+            const savedTheme = localStorage.getItem('iquant-theme');
+            const body = document.body;
+            const themeToggle = document.getElementById('themeToggle');
+
+            if (savedTheme === 'white-blue') {
+                body.classList.remove('black-gold-theme');
+                body.classList.add('white-blue-theme');
+                themeToggle.innerHTML = '<i class="fas fa-moon"></i><span>Switch Theme</span>';
+                themeToggle.classList.remove('black-gold');
+                themeToggle.classList.add('white-blue');
+                return false; // isBlackGoldTheme = false
+            } else {
+                // Default to black-gold theme
+                localStorage.setItem('iquant-theme', 'black-gold');
+                return true; // isBlackGoldTheme = true
+            }
+        }
+
+        // Save theme preference to localStorage
+        function saveThemePreference(isBlackGoldTheme) {
+            localStorage.setItem('iquant-theme', isBlackGoldTheme ? 'black-gold' : 'white-blue');
+        }
+
+        // Helper function for robust CSV parsing
+        function parseCSV(csv) {
+            const result = [];
+            let i = 0;
+            const rows = [];
+            let currentRow = [];
+            let currentField = '';
+            let inQuotes = false;
+
+            while (i < csv.length) {
+                const char = csv[i];
+                const nextChar = csv[i + 1];
+
+                if (inQuotes) {
+                    if (char === '"') {
+                        if (nextChar === '"') {
+                            currentField += '"';
+                            i += 2;
+                            continue;
+                        } else {
+                            inQuotes = false;
+                        }
+                    } else {
+                        currentField += char;
+                    }
+                } else {
+                    if (char === '"') {
+                        inQuotes = true;
+                    } else if (char === ',') {
+                        currentRow.push(currentField.trim());
+                        currentField = '';
+                    } else if (char === '\r' || char === '\n') {
+                        if (currentField !== '' || currentRow.length > 0) {
+                            currentRow.push(currentField.trim());
+                            rows.push(currentRow);
+                            currentRow = [];
+                            currentField = '';
+                        }
+                        if (char === '\r' && nextChar === '\n') i++;
+                    } else {
+                        currentField += char;
+                    }
+                }
+                i++;
+            }
+
+            if (currentField !== '' || currentRow.length > 0) {
+                currentRow.push(currentField.trim());
+                rows.push(currentRow);
+            }
+
+            if (rows.length < 2) return [];
+
+            const headers = rows[0].map(h => h.toLowerCase());
+            for (let j = 1; j < rows.length; j++) {
+                const row = rows[j];
+                const entry = {};
+                headers.forEach((header, index) => {
+                    entry[header] = row[index] || '';
+                });
+                if (entry.title) result.push(entry);
+            }
+            return result;
+        }
+
+        // Function to fetch blog data from Google Sheets
+        async function fetchBlogData() {
+            try {
+                // Using the Google Sheets CSV export
+                const sheetId = '1R1ITBIQEPws-Nr9_-fa3ESOnz64lDsMUrdxtKvBMBXo';
+                const gid = '0';
+                const url = `https://docs.google.com/spreadsheets/d/${sheetId}/export?format=csv&gid=${gid}`;
+
+                const response = await fetch(url);
+                if (!response.ok) throw new Error('Network response was not ok');
+
+                const csvData = await response.text();
+                return parseCSV(csvData);
+            } catch (error) {
+                console.error('Error fetching blog data:', error);
+                // Helpful error if on file://
+                if (window.location.protocol === 'file:') {
+                    console.warn('CORS Error detected. Please run this file through a local server (e.g., Live Server or python -m http.server) to fetch real Google Sheets data.');
+                }
+                return null;
+            }
+        }
+
+        // Function to render blog posts
+        function renderBlogPosts(posts, showAll = false) {
+            const blogGrid = document.getElementById('blog-grid');
+            const blogLoadMore = document.getElementById('blog-load-more');
+
+            blogGrid.innerHTML = '';
+
+            const postsToShow = showAll ? posts.length : Math.min(3, posts.length);
+
+            for (let i = 0; i < postsToShow; i++) {
+                const post = posts[i];
+
+                let mediaElement = '';
+                if (post.link) {
+                    if (post.link.match(/\.(jpg|jpeg|png|webp|gif)$/i)) {
+                        mediaElement = `<img src="${post.link}" alt="${post.title}" class="blog-media">`;
+                    }
+                    else if (post.link.match(/\.(mp4)$/i)) {
+                        mediaElement = `<video controls class="blog-media"><source src="${post.link}" type="video/mp4"></video>`;
+                    }
+                    else if (post.link.includes('youtube.com') || post.link.includes('youtu.be')) {
+                        let videoId = '';
+                        if (post.link.includes('youtube.com/watch?v=')) {
+                            videoId = post.link.split('v=')[1].split('&')[0];
+                        } else if (post.link.includes('youtu.be/')) {
+                            videoId = post.link.split('youtu.be/')[1].split('?')[0];
+                        } else if (post.link.includes('youtube.com/embed/')) {
+                            videoId = post.link.split('embed/')[1].split('?')[0];
+                        }
+
+                        if (videoId) {
+                            mediaElement = `<div class="blog-media-container"><iframe src="https://www.youtube.com/embed/${videoId}" frameborder="0" allowfullscreen></iframe></div>`;
+                        } else {
+                            mediaElement = `<div class="blog-media-container" style="display:flex; align-items:center; justify-content:center; background:#1a1a1a; color:#b0b0b0;"><i class="fab fa-youtube" style="font-size:3rem;"></i></div>`;
+                        }
+                    }
+                }
+
+                let formattedDate = post.date || '';
+                if (formattedDate && formattedDate.includes('/')) {
+                    const dateParts = formattedDate.split('/');
+                    if (dateParts.length === 3) {
+                        const date = new Date(`${dateParts[2]}-${dateParts[1]}-${dateParts[0]}`);
+                        if (!isNaN(date.getTime())) {
+                            formattedDate = date.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+                        }
+                    }
+                }
+
+                const blogCard = document.createElement('div');
+                blogCard.className = 'blog-card';
+                blogCard.innerHTML = `
+                    ${mediaElement}
+                    <div class="blog-content">
+                        <h3 class="blog-title">${post.title || 'Untitled'}</h3>
+                        <div class="blog-meta">
+                            <span class="blog-date"><i class="far fa-calendar-alt" style="margin-right:5px;"></i>${formattedDate}</span>
+                            <span class="blog-time"><i class="far fa-clock" style="margin-right:5px; margin-left:10px;"></i>${post.time || ''}</span>
+                        </div>
+                        <p class="blog-article">${post.artical || post.article || ''}</p>
+                    </div>
+                `;
+
+                blogCard.onclick = () => openBlogModal(i);
+                blogGrid.appendChild(blogCard);
+            }
+
+            if (posts.length > 3 && !showAll) {
+                blogLoadMore.classList.remove('hidden');
+            } else {
+                blogLoadMore.classList.add('hidden');
+            }
+        }
+
+        let cachedBlogData = null;
+        let currentPostIndex = -1;
+
+        function openBlogModal(index) {
+            if (!cachedBlogData || index < 0 || index >= cachedBlogData.length) return;
+
+            currentPostIndex = index;
+            const post = cachedBlogData[index];
+            const modal = document.getElementById('blog-modal');
+            const mediaPlaceholder = document.getElementById('modal-media-placeholder');
+            const title = document.getElementById('modal-title');
+            const meta = document.getElementById('modal-meta');
+            const text = document.getElementById('modal-text');
+
+            // Set Title
+            title.textContent = post.title || 'Untitled';
+
+            // Set Meta
+            let formattedDate = post.date || '';
+            if (formattedDate && formattedDate.includes('/')) {
+                const dateParts = formattedDate.split('/');
+                if (dateParts.length === 3) {
+                    const date = new Date(`${dateParts[2]}-${dateParts[1]}-${dateParts[0]}`);
+                    if (!isNaN(date.getTime())) {
+                        formattedDate = date.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+                    }
+                }
+            }
+            meta.innerHTML = `
+                <span class="blog-date"><i class="far fa-calendar-alt" style="margin-right:5px;"></i>${formattedDate}</span>
+                <span class="blog-time"><i class="far fa-clock" style="margin-right:5px; margin-left:10px;"></i>${post.time || ''}</span>
+            `;
+
+            // Set Text
+            text.innerHTML = (post.artical || post.article || '').replace(/\n/g, '<br>');
+
+            // Set Media
+            mediaPlaceholder.innerHTML = '';
+            if (post.link) {
+                if (post.link.match(/\.(jpg|jpeg|png|webp|gif)$/i)) {
+                    mediaPlaceholder.innerHTML = `<img src="${post.link}" alt="${post.title}" class="modal-media">`;
+                }
+                else if (post.link.match(/\.(mp4)$/i)) {
+                    mediaPlaceholder.innerHTML = `<video controls class="modal-media"><source src="${post.link}" type="video/mp4"></video>`;
+                }
+                else if (post.link.includes('youtube.com') || post.link.includes('youtu.be')) {
+                    let videoId = '';
+                    if (post.link.includes('youtube.com/watch?v=')) {
+                        videoId = post.link.split('v=')[1].split('&')[0];
+                    } else if (post.link.includes('youtu.be/')) {
+                        videoId = post.link.split('youtu.be/')[1].split('?')[0];
+                    } else if (post.link.includes('youtube.com/embed/')) {
+                        videoId = post.link.split('embed/')[1].split('?')[0];
+                    }
+
+                    if (videoId) {
+                        mediaPlaceholder.innerHTML = `<div class="blog-media-container" style="height: 500px;"><iframe src="https://www.youtube.com/embed/${videoId}" frameborder="0" allowfullscreen></iframe></div>`;
+                    }
+                }
+            }
+
+            modal.classList.add('show');
+            document.body.style.overflow = 'hidden'; // Prevent background scrolling
+        }
+
+        function closeBlogModal() {
+            const modal = document.getElementById('blog-modal');
+            modal.classList.remove('show');
+            document.body.style.overflow = 'auto';
+            currentPostIndex = -1;
+        }
+
+        function showNextPost() {
+            if (cachedBlogData && currentPostIndex < cachedBlogData.length - 1) {
+                openBlogModal(currentPostIndex + 1);
+            }
+        }
+
+        function showPrevPost() {
+            if (cachedBlogData && currentPostIndex > 0) {
+                openBlogModal(currentPostIndex - 1);
+            }
+        }
+
+        // Initialize Modal Event Listeners
+        document.getElementById('modal-close').addEventListener('click', closeBlogModal);
+        document.getElementById('modal-prev').addEventListener('click', (e) => {
+            e.stopPropagation();
+            showPrevPost();
+        });
+        document.getElementById('modal-next').addEventListener('click', (e) => {
+            e.stopPropagation();
+            showNextPost();
+        });
+        document.getElementById('blog-modal').addEventListener('click', (e) => {
+            if (e.target.id === 'blog-modal') closeBlogModal();
+        });
+
+        // Close on Escape key
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') closeBlogModal();
+            if (document.getElementById('blog-modal').classList.contains('show')) {
+                if (e.key === 'ArrowRight') showNextPost();
+                if (e.key === 'ArrowLeft') showPrevPost();
+            }
+        });
+
+        // Function to initialize blog page
+        async function initBlogPage() {
+            const blogLoading = document.getElementById('blog-loading');
+            const blogError = document.getElementById('blog-error');
+            const blogGrid = document.getElementById('blog-grid');
+
+            if (cachedBlogData) {
+                blogLoading.classList.add('hidden');
+                blogGrid.classList.remove('hidden');
+                renderBlogPosts(cachedBlogData);
+                return;
+            }
+
+            blogLoading.classList.remove('hidden');
+            blogError.classList.add('hidden');
+            blogGrid.classList.add('hidden');
+
+            try {
+                const blogData = await fetchBlogData();
+
+                if (!blogData || blogData.length === 0) throw new Error('No blog data');
+
+                blogData.sort((a, b) => {
+                    const dateA = a.date ? new Date(a.date.split('/').reverse().join('-')) : new Date(0);
+                    const dateB = b.date ? new Date(b.date.split('/').reverse().join('-')) : new Date(0);
+                    if (dateB.getTime() !== dateA.getTime()) return dateB.getTime() - dateA.getTime();
+                    return (b.time || '').localeCompare(a.time || '');
+                });
+
+                cachedBlogData = blogData;
+                blogLoading.classList.add('hidden');
+                blogGrid.classList.remove('hidden');
+                renderBlogPosts(blogData);
+
+                document.getElementById('show-more-btn').onclick = () => renderBlogPosts(blogData, true);
+            } catch (error) {
+                console.error('Error initializing blog page:', error);
+                blogLoading.classList.add('hidden');
+                blogError.classList.remove('hidden');
+
+                if (window.location.protocol === 'file:') {
+                    blogError.innerHTML = 'Failed to load blog posts. <br><small>Note: Browser blocked local file access to Google Sheets (CORS). Please run this file through a local server.</small>';
+                }
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', function () {
+            const themeToggle = document.getElementById('themeToggle');
+            const body = document.body;
+            const navLinks = document.querySelectorAll('.nav-link, .btn-primary[data-page]'); // Include buttons with data-page
+
+            let isBlackGoldTheme = loadThemePreference();
+
+            // Navigation Logic
+            function navigateTo(pageId) {
+                // Hide all sections
+                document.querySelectorAll('.page-section').forEach(section => {
+                    section.classList.remove('active-page');
+                });
+
+                // Show target section
+                const targetSection = document.getElementById(pageId + '-page');
+                if (targetSection) {
+                    targetSection.classList.add('active-page');
+                    window.scrollTo(0, 0);
+
+                    // Initialize blog page if navigating to it
+                    if (pageId === 'blog') {
+                        initBlogPage();
+                    }
+                }
+
+                // Update active nav link
+                document.querySelectorAll('.nav-link').forEach(link => {
+                    link.classList.remove('active');
+                    if (link.getAttribute('data-page') === pageId) {
+                        link.classList.add('active');
+                    }
+                });
+            }
+
+            // Click Handlers for Navigation
+            navLinks.forEach(link => {
+                link.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    const page = this.getAttribute('data-page');
+                    navigateTo(page);
+                });
+            });
+
+            // Q&A Accordion Logic
+            const qaQuestions = document.querySelectorAll('.qa-question');
+
+            qaQuestions.forEach(question => {
+                question.addEventListener('click', () => {
+                    const item = question.parentElement;
+                    const answer = item.querySelector('.qa-answer');
+                    const isActive = item.classList.contains('active');
+
+                    // Close all other items
+                    document.querySelectorAll('.qa-item').forEach(otherItem => {
+                        const otherAnswer = otherItem.querySelector('.qa-answer');
+                        otherItem.classList.remove('active');
+                        if (otherAnswer) otherAnswer.style.maxHeight = null;
+                    });
+
+                    // Toggle current item
+                    if (!isActive) {
+                        item.classList.add('active');
+                        answer.style.maxHeight = answer.scrollHeight + "px";
+                    } else {
+                        // If it was active, removing the class is handled by the "Close all" loop above,
+                        // but we can explicitly reset it here for clarity just in case logic changes
+                        item.classList.remove('active');
+                        answer.style.maxHeight = null;
+                    }
+                });
+            });
+
+            // Theme Toggling
+            themeToggle.addEventListener('click', function () {
+                if (isBlackGoldTheme) {
+                    // Switch to White/Blue theme
+                    body.classList.remove('black-gold-theme');
+                    body.classList.add('white-blue-theme');
+                    themeToggle.innerHTML = '<i class="fas fa-moon"></i><span>Switch Theme</span>';
+                    themeToggle.classList.remove('black-gold');
+                    themeToggle.classList.add('white-blue');
+                } else {
+                    // Switch to Black/Gold theme
+                    body.classList.remove('white-blue-theme');
+                    body.classList.add('black-gold-theme');
+                    themeToggle.innerHTML = '<i class="fas fa-sun"></i><span>Switch Theme</span>';
+                    themeToggle.classList.remove('white-blue');
+                    themeToggle.classList.add('black-gold');
+                }
+                isBlackGoldTheme = !isBlackGoldTheme;
+
+                // Save theme preference
+                saveThemePreference(isBlackGoldTheme);
+            });
+
+            // Navigation active state
+            navLinks.forEach(link => {
+                link.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    // Navigation logic is handled in navigateTo function
+                });
+            });
+        });
+    </script>
+</body>
+
+</html>
